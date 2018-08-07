@@ -92,4 +92,42 @@ line-height对块级元素完全不起作用，在工作中我们改变line-heig
     }
     <p>微软雅黑</p> 
 让单行文本垂直居中line-height就可以搞定了，多行文本的话那还要加上vertical-align属性。
+代码如下：
 
+        .box {   
+            line-height: 120px;
+            background-color: #f0f3f9;
+         } 
+         .content {   
+            display: inline-block;
+            line-height: 20px;
+            margin: 0 20px;
+            vertical-align: middle;
+         } 
+         <div class="box">   
+            <div class="content">基于行高实现的...</div> 
+         </div>
+实现的步骤大致分两步，
+第一步是多行文字用一个标签包住，使用display：inline-block让其保持为内联属性，从而可以设置vertical-align属性。最重要的是生成行框盒子，获得每个行框盒子附带的幽灵空白节点。那line-height就有了用武之地，在.content元素前撑起了高度为120px、宽度为0的内联元素。
+第二步是用vertical-align改变ling-height的默认值，line-height的默认值是基线对齐的。从而实现近似垂直居中效果。
+
+### line-height的各类属性值
+line-height的默认值是normal，此外还支持数值、百分比以及长度值。
+
+#### line-height：normal
+当值为normal时，
+
+| 字体        | Chrome    |  Firefox  |  IE    |
+| --------    | -----:    | ----:     |  :----:|
+| 微软雅黑     | 1.32   |   1.321   |  1.32    |
+| 宋体         | 1.141  |   1.142   |  1.142   |
+
+我们可以看到，只要字体确定，那么各大浏览器的解析值基本上一样。但是，关键是，不同浏览器默认使用的中英文字体时不一样的。所以在开发中，对line-height进行重置是有必要的。在进行重置前，我们先看看line-height的其他数值
+
+> 数值，如line-height:1.5，其终的计算值是和当前font-size相乘后的值。 例如，假设我们此时的 font-size 大小为 14px，则 line-height 计算值是 1.5*14px=21px。 
+
+> 百分比值，如 line-height:150%，其终的计算值是和当前 font-size 相乘后 的值。例如，假设我们此时的font-size大小为14px，则 line-height计算值是 150%*14px=21px。 
+
+> 长度值，也就是带单位的值，如 line-height:21px 或者 line-height:1.5em 等，此处 em 是一个相对于 font-size 的相对单位，因此，line-height:1.5em 终的计算值也是和当前font-size相乘后的值。例如，假设我们此时的font-size 大小为14px，则line-height计算值是1.5*14px=21px。 
+
+这三者之间在继承的细节上有所差别。如果过使用数值作为line-height的属性值，那么所有子元素继承都会是这个值；如果是另外两个值，那么所有子元素继承的是最终的计算结果。
