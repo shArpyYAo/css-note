@@ -12,7 +12,6 @@ css相关的读书笔记，做个Research Review
 
 关于基线有个专门的概念叫作x-height，指的是x字母的高度，术语描述就是基线和等分线之间的距离
 
-
 vertical-align： middle，在css中，middle指的是基线往上1/2x-height的高度
 
 所以vertical-align：middle实现的垂直居中只是近似效果，只是平时我们使用的字号都是16、18px，看不出来
@@ -131,3 +130,32 @@ line-height的默认值是normal，此外还支持数值、百分比以及长度
 > 长度值，也就是带单位的值，如 line-height:21px 或者 line-height:1.5em 等，此处 em 是一个相对于 font-size 的相对单位，因此，line-height:1.5em 终的计算值也是和当前font-size相乘后的值。例如，假设我们此时的font-size 大小为14px，则line-height计算值是1.5*14px=21px。 
 
 这三者之间在继承的细节上有所差别。如果过使用数值作为line-height的属性值，那么所有子元素继承都会是这个值；如果是另外两个值，那么所有子元素继承的是最终的计算结果。
+
+### 内联元素line-height的“大值特性”
+先来看一段代码
+
+    <div class="box">   
+        <span>内容...</span> 
+    </div>
+css不一样，分别是：
+
+    .box {   
+        line-height: 96px; 
+    } 
+    .box span {   
+        line-height: 20px; 
+    }
+和
+
+    .box {   
+        line-height: 20px; 
+     } 
+     .box span {   
+        line-height: 96px; 
+     }
+问题来了，box的高度是多少？第一种情况是父级设置的96px，按照经验，子元素会覆盖父级的，那么line-height应该是20px。第二种情况则是96px。
+
+很可惜，这样是错的（我刚开始看的时候也是这样想的）。结果是box的高度都是96px。就是说，无论line-height如何设置，最终父级元素的高度都是由数值最大的linge-height决定的。这是因为，幽灵空白节点的存在。
+
+<span>是内联元素，内联元素组成内联盒子，内联盒子组成行框盒子。注意，行框盒子前面都会有幽灵空白节点。当父级设置line-height为96px时，幽灵空白节点高度为96px。我们知道，行框盒子的高度是由最高的那个内联盒子决定的，这就是box元素永远是最大的line-height的原因。那么，要避免幽灵空白节点的干扰，可以设置<span>元素为inline-block，创建一个独立的行框盒子，这样子我们设置给<span>的line-height就可以对幽灵空白节点生效了。这也是多行文字垂直居中示例中这么设置的原因。
+    
