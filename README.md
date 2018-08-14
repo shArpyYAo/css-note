@@ -37,7 +37,7 @@ css代码如下
     } 
     
 ### 关于line-height
-<div>里面包裹文字，<div>的高度不是font-size决定的，是由line-height决定。
+div里面包裹文字，div的高度不是font-size决定的，是由line-height决定。
 对于非替换的纯内联元素，line-height完全决定它的高度，padding、border之类的属性对它的可视高度是完全没有影响的。也就是说“盒模型”是针对块级元素的。
     
 #### line-height对内联元素作用的细节
