@@ -46,7 +46,8 @@ line-height是通过调节文字的行距来控制高度的，在css中，文字
 #### 半行距的范围
 在css中，行距 = line-height - em-box。有了行距，一分为二，分别在em-box的上面和下面加上，就构成了文字的完整高度。这里有个问题，em-box是什么东西？它的高度正好是1em，1em相当于当前一个font-size的大小。也就是说行距 近似等于 line-height - font-size，
 当我们的字体的宋体的时候，内容区域（可以近似理解为ff/ie浏览器下文本选中带背景区域）和em-box是等同的（书上说的，未求证）。于是我们可以利用宋体，准确揪出半行距的范围
-##### 测试代码
+
+测试代码
         
         .test {   
             font-family: simsun;   
@@ -110,10 +111,10 @@ line-height对块级元素完全不起作用，在工作中我们改变line-heig
 第一步是多行文字用一个标签包住，使用display：inline-block让其保持为内联属性，从而可以设置vertical-align属性。最重要的是生成行框盒子，获得每个行框盒子附带的幽灵空白节点。那line-height就有了用武之地，在.content元素前撑起了高度为120px、宽度为0的内联元素。
 第二步是用vertical-align改变ling-height的默认值，line-height的默认值是基线对齐的。从而实现近似垂直居中效果。
 
-### line-height的各类属性值
+#### line-height的各类属性值
 line-height的默认值是normal，此外还支持数值、百分比以及长度值。
 
-#### line-height：normal
+##### line-height：normal
 当值为normal时，
 
 | 字体        | Chrome    |  Firefox  |  IE    |
@@ -131,7 +132,7 @@ line-height的默认值是normal，此外还支持数值、百分比以及长度
 
 这三者之间在继承的细节上有所差别。如果过使用数值作为line-height的属性值，那么所有子元素继承都会是这个值；如果是另外两个值，那么所有子元素继承的是最终的计算结果。
 
-### 内联元素line-height的“大值特性”
+#### 内联元素line-height的“大值特性”
 先来看一段代码
 
     <div class="box">   
@@ -159,3 +160,21 @@ css不一样，分别是：
 
 <span>是内联元素，内联元素组成内联盒子，内联盒子组成行框盒子。注意，行框盒子前面都会有幽灵空白节点。当父级设置line-height为96px时，幽灵空白节点高度为96px。我们知道，行框盒子的高度是由最高的那个内联盒子决定的，这就是box元素永远是最大的line-height的原因。那么，要避免幽灵空白节点的干扰，可以设置<span>元素为inline-block，创建一个独立的行框盒子，这样子我们设置给<span>的line-height就可以对幽灵空白节点生效了。这也是多行文字垂直居中示例中这么设置的原因。
     
+### vertical-align
+vertical-align的属性值分为一下4类：
+> 线类，如baseline（默认值）、top、middle、bottom;
+
+> 文本类，如text-top、text-bottom;
+
+> 上标下标类，如sub、super;
+
+> 数值百分比类，如20px、2em、20%等
+
+line-height的默认值是基线对齐的，也就是baseline。而vertical-align是改变line-height对齐的位置，它的默认值也是baseline。vertical-align:baseline等同于vertical-align:0。
+
+vertical-align的百分比值是相对于line-height计算的。
+
+#### vertical-align 作用的前提 
+vertical-align只能作用于display计算值为：inline、inline- block，inline-table或table-cell的元素上。因此，默认情况下，<span>、<strong>、 <em>等内联元素，<img>、<button>、<input>等替换元素，非 HTML 规范的自定义标签 元素，以及<td>单元格，都是支持vertical-align属性的，其他块级元素则不支持。 
+
+像float、position：absolute，这类会改变display计算值的css属性或属性值，会使vertical-align无效的，这里要注意下。
