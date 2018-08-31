@@ -178,3 +178,16 @@ vertical-align的百分比值是相对于line-height计算的。
 vertical-align只能作用于display计算值为：inline、inline- block，inline-table或table-cell的元素上。因此，默认情况下，<span>、<strong>、 <em>等内联元素，<img>、<button>、<input>等替换元素，非 HTML 规范的自定义标签 元素，以及<td>单元格，都是支持vertical-align属性的，其他块级元素则不支持。 
 
 像float、position：absolute，这类会改变display计算值的css属性或属性值，会使vertical-align无效的，这里要注意下。
+而且，要注意，幽灵空白节点的存在，如：
+css：
+
+    .box {   height: 128px; } 
+    .box > img {   height: 96px;   vertical-align: middle; } 
+html：
+
+    <div class="box">   <img src="1.jpg"> </div>
+    
+上面的代码图片顶着box元素上边缘显示，根本没有垂直居中。这是因为幽灵空白节点太小了，如果加上line-height，设置成足够高的高度，vertical-align就生效了。
+
+#### vertical-align 和 line-height的关系
+明显的就是vertical-align的百分比值是相对于line-height计算的，
