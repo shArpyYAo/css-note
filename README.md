@@ -175,7 +175,7 @@ line-height的默认值是基线对齐的，也就是baseline。而vertical-alig
 vertical-align的百分比值是相对于line-height计算的。
 
 #### vertical-align 作用的前提 
-vertical-align只能作用于display计算值为：inline、inline- block，inline-table或table-cell的元素上。因此，默认情况下，<span>、<strong>、 <em>等内联元素，<img>、<button>、<input>等替换元素，非 HTML 规范的自定义标签 元素，以及<td>单元格，都是支持vertical-align属性的，其他块级元素则不支持。 
+vertical-align只能作用于display计算值为：inline、inline- block，inline-table或table-cell的元素上。因此，默认情况下，<span>、<strong>、<em>等内联元素，<img>、<button>、<input>等替换元素，非 HTML 规范的自定义标签元素，以及<td>单元格，都是支持vertical-align属性的，其他块级元素则不支持。 
 
 像float、position：absolute，这类会改变display计算值的css属性或属性值，会使vertical-align无效的，这里要注意下。
 而且，要注意，幽灵空白节点的存在，如：
