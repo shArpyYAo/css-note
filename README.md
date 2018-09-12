@@ -190,4 +190,39 @@ html：
 上面的代码图片顶着box元素上边缘显示，根本没有垂直居中。这是因为幽灵空白节点太小了，如果加上line-height，设置成足够高的高度，vertical-align就生效了。
 
 #### vertical-align 和 line-height的关系
-明显的就是vertical-align的百分比值是相对于line-height计算的，
+明显的就是vertical-align的百分比值是相对于line-height计算的，这里举一个例子：
+
+先看下相关代码
+
+    .box { line-height: 32px; } 
+    .box > span { font-size: 24px; } 
+    <div class="box">   
+        <span>文字</span> 
+    </div>
+    
+这里box的高度是36而非设置的line-height高度32，原因是我们对span里面的文字设置了字号，但是，span外面.box里面却没有。大家应该还记得“strut”幽灵空白节点，为了看的清楚点，我们可以这样：
+
+    .box { line-height: 32px; } 
+    .box > span { font-size: 24px; } 
+    <div class="box">   
+        x<span>文字x</span> 
+    </div>
+    
+此时，差别就看得出来了，span里的x与span外的x明显不一样，它们的高度都一样都是32px，但是字号不一样，font-size 越大字符的基线位置越往下，因为文字默认全部都是基线对齐，所以当字 号大小不一样的两个文字在一起的时候，彼此就会发生上下位移。在这个例子中，因为发生了位移，撑开了.box，导致最终高度是36px。
+
+解决方法很简单，直接
+
+    .box {   line-height: 32px;   font-size: 24px; }
+    .box > span { }
+
+或者改变垂直对齐方式，如顶部对齐，这样就不会有参差位移了： 
+
+    .box { line-height: 32px; } 
+    .box > span {    font-size: 24px;   vertical-align: top; }
+    
+#### 深入理解 vertical-align 线性类属性值 
+
+* inline-block 与 baseline 
+
+> vertical-align属性的默认值baseline在文本之类的内联元素那里就是字符 x 的下 边缘，对于替换元素则是替换元素的下边缘。但是，如果是 inline-block 元素，则规则要 复杂了：一个inline-block元素，如果里面没有内联元素，或者overflow不是visible， 则该元素的基线就是其margin底边缘；否则其基线就是元素里面最后一行内联元素的基线。 
+
