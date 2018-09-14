@@ -226,3 +226,30 @@ html：
 
 > vertical-align属性的默认值baseline在文本之类的内联元素那里就是字符 x 的下 边缘，对于替换元素则是替换元素的下边缘。但是，如果是 inline-block 元素，则规则要 复杂了：一个inline-block元素，如果里面没有内联元素，或者overflow不是visible， 则该元素的基线就是其margin底边缘；否则其基线就是元素里面最后一行内联元素的基线。 
 
+举个例子，现在有两个同尺寸的inline-block元素，唯一的区别就是一个是空的，一个是里面有字符，代码如下：
+
+    .dib-baseline {   
+        display: inline-block;
+        width: 150px;
+        height: 150px;
+        border: 1px solid #cad5eb;
+        background-color: #f0f3f9;
+    } 
+    <span class="dib-baseline"></span> 
+    <span class="dib-baseline">x-baseline</span> 
+    
+这时候会出现这两个元素不在同一水平上，感兴趣可以自己去测一测（之前时不时遇到这个问题，现在豁然开朗）。原因是第一个元素里面没有内联元素，因此基线就是容器的下边缘，也就是下边框；而第二个有字符，因此第二个框框的基线就是字符的基线。于是就会出现这样的情况。
+
+解决方法就是要不把vertical-align改成除bottom之外的top、middle值。要不在第一个框框内也是加个字符如&nbsp;。都是改变对齐方式。
+
+* 了解 vertial-align:top/bottom 
+
+顾名思义，vertial-align:top就是垂直上边缘对齐，具体定义如下。 
+
+> 内联元素：元素底部和当前行框盒子的顶部对齐。
+
+> table-cell元素：元素底padding边缘和表格行的顶部对齐
+
+vertial-align:bottom 声明与此类似，只是把“顶部”换成“底部”，把“上边缘” 换成“下边缘”。
+
+* vertial-align:middle 与近似垂直居中 
