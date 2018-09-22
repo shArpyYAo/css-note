@@ -257,6 +257,7 @@ vertial-align:bottom 声明与此类似，只是把“顶部”换成“底部�
 line-height 和 vertial-align: middle 实现的多行文本或者图片 的垂直居中全部都是“近似垂直居中”，原因与vertial- align:middle的定义有关。
 
 > 内联元素:元素的垂直中心点和行框盒子基线往上 1/2 x-height 处对齐。
+
 > table-cell 元素:单元格填充盒子相对于外面的表格行居中对齐。
 
 可以看到，vertical-align：middle 是让内联元素的真正意义上的垂直中心位置和字符x的交叉点对齐。
@@ -270,6 +271,7 @@ line-height 和 vertial-align: middle 实现的多行文本或者图片 的垂�
 文本类属性值指的就是 text-top 和 text-bottom，定义如下。
 
 > vertical-align:text-top:盒子的顶部和父级内容区域的顶部对齐。
+
 > vertical-align:text-bottom:盒子的底部和父级内容区域的底部对齐。
 
 首先内容区域是可以看成是Firefox/IE浏览器文本选中的背景区域，或者默认状态下的内联文本的背景色区域。而父级内容区域是在父级元素当前font-size和font-family下应有的内容区域大小。
@@ -278,15 +280,18 @@ line-height 和 vertial-align: middle 实现的多行文本或者图片 的垂�
 
 #### 简单理解 vertical-align 上标下标类属性值
 
-vertical-align 上标下标类属性值指的就是 sub 和 super 两个值，分别表示下标和上标。对应有html的标签，<sub>和<sup>。<sup>标签默认的 vertical-align 属性值就是 super，<sub>标签默认的 vertical-align 属性值就是 sub。
+vertical-align 上标下标类属性值指的就是 sub 和 super 两个值，分别表示下标和上标。对应有html的标签，sub和sup。sup标签默认的 vertical-align 属性值就是 super，sub标签默认的 vertical-align 属性值就是 sub。
     
 定义：
 
 > vertical-align:super:提高盒子的基线到父级合适的上标基线位置。
+
 > vertical-align:sub:降低盒子的基线到父级合适的下标基线位置。
 
 #### 无处不在的 vertical-align
 
 对于内联元素，如果遇到奇怪的现象，请一定要意识到，有个“幽灵空白节点”以及无处不在的 vertical-align 属性。
 
-对于top/bottom和baseline/middle，前者对齐是看
+对于top/bottom和baseline/middle，前者对齐是看行框盒子，而后者是跟x字符有关。对于理解vertical-align，首先要深入理解内联盒子模型，什么行框盒子之类的；其次，不同属性值定义不同，很多属性在table-cell元素那有着完全不同的定义，而且也与字符x、line-height、font-size和font-family属性密切相关。
+
+
