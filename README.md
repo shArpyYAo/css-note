@@ -253,3 +253,12 @@ html：
 vertial-align:bottom 声明与此类似，只是把“顶部”换成“底部”，把“上边缘” 换成“下边缘”。
 
 * vertial-align:middle 与近似垂直居中 
+
+line-height 和 vertial-align: middle 实现的多行文本或者图片 的垂直居中全部都是“近似垂直居中”，原因与vertial- align:middle的定义有关。
+
+> 内联元素:元素的垂直中心点和行框盒子基线往上 1/2 x-height 处对齐。
+> table-cell 元素:单元格填充盒子相对于外面的表格行居中对齐。
+
+可以看到，vertical-align：middle 是让内联元素的真正意义上的垂直中心位置和字符x的交叉点对齐。
+
+然而，x字符的
