@@ -265,3 +265,28 @@ line-height 和 vertial-align: middle 实现的多行文本或者图片 的垂�
 
 有个解决方法，就是把font-size设置成0，这样字符x就变成一个看不见的点，根据line-height的半行间距上下等分规则，x的交叉点正好在整个容器的垂直中心位置，这样就可以实现真正意义上的垂直居中。不过意义不大，因为我们使用的font-size并不大，用户的肉眼并不能识别，并不能感觉到差异。
 
+#### 深入理解 vertical-align 文本类属性值
+
+文本类属性值指的就是 text-top 和 text-bottom，定义如下。
+
+> vertical-align:text-top:盒子的顶部和父级内容区域的顶部对齐。
+> vertical-align:text-bottom:盒子的底部和父级内容区域的底部对齐。
+
+首先内容区域是可以看成是Firefox/IE浏览器文本选中的背景区域，或者默认状态下的内联文本的背景色区域。而父级内容区域是在父级元素当前font-size和font-family下应有的内容区域大小。
+
+因此，这个定义又可以理解为(以 text-top 举例):假设元素后面有一个和父元素 font- size、font-family 一模一样的文字内容，则 vertical-align:text-top 表示元素和这个文字的内容区域的上边缘对齐。
+
+#### 简单理解 vertical-align 上标下标类属性值
+
+vertical-align 上标下标类属性值指的就是 sub 和 super 两个值，分别表示下标和上标。对应有html的标签，<sub>和<sup>。<sup>标签默认的 vertical-align 属性值就是 super，<sub>标签默认的 vertical-align 属性值就是 sub。
+    
+定义：
+
+> vertical-align:super:提高盒子的基线到父级合适的上标基线位置。
+> vertical-align:sub:降低盒子的基线到父级合适的下标基线位置。
+
+#### 无处不在的 vertical-align
+
+对于内联元素，如果遇到奇怪的现象，请一定要意识到，有个“幽灵空白节点”以及无处不在的 vertical-align 属性。
+
+对于top/bottom和baseline/middle，前者对齐是看
