@@ -261,4 +261,7 @@ line-height 和 vertial-align: middle 实现的多行文本或者图片 的垂�
 
 可以看到，vertical-align：middle 是让内联元素的真正意义上的垂直中心位置和字符x的交叉点对齐。
 
-然而，x字符的
+然而，x字符的位置都是偏下的，font-size越大越明显，所以导致 vertical-align：middle 实现的都是“近似垂直居中”。
+
+有个解决方法，就是把font-size设置成0，这样字符x就变成一个看不见的点，根据line-height的半行间距上下等分规则，x的交叉点正好在整个容器的垂直中心位置，这样就可以实现真正意义上的垂直居中。不过意义不大，因为我们使用的font-size并不大，用户的肉眼并不能识别，并不能感觉到差异。
+
