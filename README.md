@@ -438,5 +438,106 @@ BFC全称为block formatting context，中文为“块级格式化上下文”�
 
 如果 overflow-x 和 overflow-y 属性中的一个值设置为 visible 而另外一个设置为 scroll、auto 或 hidden，则 visible 的样式表现会如同 auto。也就是说， 除非 overflow-x 和 overflow-y 的属性值都是 visible，否则 visible 会当成 auto 来解析。换句话说，永远不可能实现一个方向溢出剪裁或滚动，另一方向内容溢出显示的效果。但是，scroll、auto 和 hidden 这 3 个属性值是可以共存的。
 
-#### overflow 与滚动条
+#### overflow 和锚点定位
 
+##### 锚点定位行为的触发条件
+
+(1) URL 地址中的锚链与锚点元素对应并有交互行为; 
+(2)可 focus 的锚点元素处于 focus 状态。
+
+锚点定位行为的发生，本质上是通过改变容器滚动高度或者宽度来实现的。锚点定位也可以发生在普通的容器元素上，而且定位行为的发生是由内而外的。“由内而外”指的是，普通元素和窗体同时可滚动的时候，会由内而外触发所有可滚 动窗体的锚点定位行为。其次就是设置了 overflow:hidden 的元素也是可滚动的，overflow:hidden 跟 overflow:auto 和 overflow:scroll 的差别就 在于有没有那个滚动条。元素设置了 overflow:hidden 声明，里面内容高度溢出的时候，滚动依然存在，仅仅滚动条不存在!
+
+基于以上原理我们可以基于 URL 地址的锚链触发锚点定位实现的选项卡切换效果。
+
+		<div class="box">
+		  <div class="list" id="one">1</div>
+		  <div class="list" id="two">2</div>
+		  <div class="list" id="three">3</div>
+		  <div class="list" id="four">4</div>
+		</div>
+		<div class="link">
+		  <a href="#one">1</a>
+		  <a href="#two">2</a>
+		  <a href="#three">3</a>
+		  <a href="#four">4</a>
+		</div>
+		 .box {
+		   height: 10em;
+		   border: 1px solid #ddd;
+		   overflow: hidden;
+		}
+		.list {
+		   line-height: 10em;
+		   background: #ddd;
+		}
+		
+容器设置了 overflow:hidden，且每个列表高度和容器的高度一样高，这样保证永远只显示一个列表。当我们点击按钮，如第三个按钮，会改变 URL 地址的锚链为#three，从 而触发 id 为 three 的第三个列表发生的锚点定位，也就是改变容器滚动高度让列表 3 的上 边缘和滚动容器上边缘对齐，从而实现选项卡效果。
+
+上面的例子有两个不足之处：其一，容器高度需要固定;其二，也是最麻烦的，就是“由内而外”的锚点定位会触发窗体的重定位，也就是说，如果页面也是可以滚动的，则点击选项卡按钮后页面会发生跳动，这种体验显然是非常不好的。
+
+我们可以使用“focus 锚点定位”解决页面跳动问题问题
+
+		<div class="box">
+	       <div class="list"><input id="one">1</div>
+	       <div class="list"><input id="two">2</div>
+	       <div class="list"><input id="three">3</div>
+	       <div class="list"><input id="four">4</div>
+	    </div>
+	    <div class="link">
+	       <label class="click" for="one">1</label>
+	       <label class="click" for="two">2</label>
+	       <label class="click" for="three">3</label>
+	       <label class="click" for="four">4</label>
+	</div> .box {
+	       height: 10em;
+	       border: 1px solid #ddd;
+	       overflow: hidden;
+	}
+	.list {
+	       height: 100%;
+	       background: #ddd;
+	       position: relative;
+	    }
+	    .list > input {
+	      position: absolute; top:0;
+	      height: 100%; width: 1px;
+	      border:0; padding: 0; margin: 0;
+	      clip: rect(0 0 0 0);
+	}
+	
+	
+原理其实很简单，就是在每个列表里塞入一个肉眼看不见的<input>输入框，然后选项卡按钮变成<label>元素，并通过 for 属性与<input>输入框的 id 相关联，这样，点击选项按 钮会触发输入框的 focus 行为，触发锚点定位，实现选项卡切换效果。
+
+#### float 的兄弟 position:absolute
+
+首先
+
+		.brother {
+			position: absolute; 
+			float: left; // 无效
+		}
+		
+然后，“块状化”与浮动类似。也具有破坏性、BFC特性。absolute天然具有“包裹性”。
+
+#### absolute 的包含块
+
+(1)根元素(很多场景下可以看成是<html>)被称为“初始包含块”，其尺寸等同于浏览 器可视窗口的大小。
+(2)对于其他元素，如果该元素的 position 是 relative 或者 static，则“包含块” 由其最近的块容器祖先盒的 content box 边界形成。
+(3)如果元素 position:fixed，则“包含块”是“初始包含块”。
+(4)如果元素 position:absolute，则“包含块”由最近的 position 不为 static 的祖先元素建立，具体方式如下：
+
+如果该祖先元素是纯 inline 元素，则规则略复杂：
+
+* 假设给内联元素的前后各生成一个宽度为 0 的内联盒子(inline box)，则这两
+个内联盒子的 padding box 外面的包围盒就是内联元素的“包含块”;
+
+* 如果该内联元素被跨行分割了，那么“包含块”是未定义的，也就是 CSS2.1
+规范并没有明确定义，浏览器自行发挥。
+
+否则，“包含块”由该祖先的 padding box 边界形成。如果没有符合条件的祖先元素，则“包含块”是“初始包含块”。
+
+可以看到，和常规元素相比，absolute 绝对定位元素的“包含块”有以下 3 个明显差异:
+
+(1)内联元素也可以作为“包含块”所在的元素;
+(2)“包含块”所在的元素不是父块级元素，而是最近的 position 不为 static 的祖先 元素或根元素;
+(3)边界是 padding box 而不是 content box。
