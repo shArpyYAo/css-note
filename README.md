@@ -359,3 +359,84 @@ float 属性有个著名的特性表现，就是会让父元素的高度塌陷�
 
 #### float与流体布局
 
+* 一侧定宽的两栏自适应布局
+
+		<div class="father">
+			<img src="me.jpg">
+			<p class="animal">小猫1，小猫2，...</p>
+		</div>
+	    .father {
+	      overflow: hidden;
+	    }
+	    .father > img {
+	      width: 60px; height: 64px;
+	      float: left;
+		 }
+		.animal {
+	      margin-left: 70px;
+		}
+
+利用float带来的环绕特性，可以利用margin、border、padding来改变animal的content box的尺寸，因为它没设置宽度，也没有设置浮动。这种一侧定宽，另一侧自适应的布局也同样适应多栏布局，只要有一栏固定宽度即可。
+
+#### 什么是clear属性
+
+官方对clear的解释是：“元素盒子的边不能和前面的浮动元素相邻。”所以clear作用的本质并不是清除浮动，而是不与浮动元素同一行显示。
+
+clear 属性只有块级元素才有效的，而::after 等伪元素默认都是内联水平，这就是借
+助伪元素清除浮动影响时需要设置 display 属性值的原因。
+
+#### BFC的定义
+
+BFC全称为block formatting context，中文为“块级格式化上下文”。相对应的还有IFC， 也就是inline formatting context，中文为“内联格式化上下”。
+
+如果一个元素具有 BFC，内部子元素再怎么翻江倒海、翻云覆雨，都不会影响外部的元素。所以，BFC 元素是不可能发生 margin 重叠的，因为 margin 重叠是会影响外面的元素的;BFC 元素也可以用来清除浮动的影响，因为如果不清除，子元素浮动则父元素高度塌陷，必然会影响后面元素布局和定位，这显然有违 BFC 元素的子元素不会影响外部元素的设定。
+
+那什么时候会触发 BFC 呢?常见的情况如下:
+
+* <html>根元素;
+
+* float 的值不为 none;
+
+* overflow 的值为 auto、scroll 或 hidden;
+
+* display 的值为 table-cell、table-caption 和 inline-block 中的任何一个;
+
+* position 的值不为 relative 和 static。
+
+#### BFC与流体布局
+
+		<div class="father">
+			<img src="me.jpg">
+			<p class="animal">小猫1，小猫2，...</p>
+    	</div>
+    	img { float: left; }
+    	.animal { overflow: hidden; }
+    	
+根据BFC的表现原则，具有 BFC 特性的元素的子元素不会受外部元素影响，也不会影响外部元素。于是，这里的.animal 元素为了不和浮动元素产生任何交集，顺着浮动边缘形成自己的封闭上下文。
+
+理论上，任何 BFC 元素和 float 元素相遇的时候，都可以实现自动填充的自适应布局。 但是，由于绝大多数的触发 BFC 的属性自身有一些古怪的特性，所以，实际操作的时候，能兼 顾流体特性和 BFC 特性来实现无敌自适应布局的属性并不多。下面我们一个一个来看，每个 CSS 属性选一个代表来进行说明。
+
+(1)float:left。浮动元素本身 BFC 化，然而浮动元素有破坏性和包裹性，失去了元素本身的流体自适应性，因此，无法用来实现自动填满容器的自适应布局。不过，其因兼容性还算良好，与搭积木这种现实认知匹配，上手简单，因此在旧时代被大肆使用，也就是常说的“浮动布局”，也算阴差阳错地开创了自己的一套布局。
+
+(2)position:absolute。这个脱离文档流有些严重，过于清高，和非定位元素很难玩到一块儿去，我就不说什么了。
+
+(3)overflow:hidden。这个超棒!不像浮动和绝对定位，玩得有点儿过。其本身还是一个很普通的元素，因此，块状元素的流体特性保存得相当完好，附上 BFC 的独立区域特性， 可谓如虎添翼、宇宙无敌!而且 overflow:hidden 的 BFC 特性从 IE7 浏览器开始就支持， 兼容性也很不错。唯一的问题就是容器盒子外的元素可能会被隐藏掉，一定程度上限制了这种特性的大规模使用。不过，溢出隐藏的交互场景比例不算很高，所以它还是可以作为常用 BFC 布局属性使用的。
+
+(4)display:inline-block。这是 CSS 世界最伟大的声明之一，但是用在这里，就有些捉襟见肘了。display:inline-block 会让元素尺寸包裹收缩，完全就不是我们想要的 block 水平的流动特性。只能是一声叹息舍弃掉!然而，峰回路转，世事难料。大家应该知道，IE6 和 IE7 浏览器下，block 水平的元素设置 display:inline-block 元素还是 block 水 平，也就是还是会自适应容器的可用宽度显示。于是，对于 IE6 和 IE7 浏览器，我们会阴差阳错得到一个比 overflow:hidden 更强大的声明，既 BFC 特性加身，又流体特性保留。
+
+(5)display:table-cell。其让元素表现得像单元格一样，IE8 及以上版本浏览器才支持。跟 display:inline-block 一样，它会跟随内部元素的宽度显示，看样子也是不合适的命。但是，单元格有 一个非常神奇的特性，就是宽度值设置得再大，实际宽度也不会超过表格容器的宽度。
+
+(6)display:table-row。对 width 无感，无法自适应剩余容器空间。
+
+(7)display:table-caption。此属性一无是处。
+
+#### overflow 剪裁界线 border box
+
+当子元素内容超出容器宽度高度限制的时候，剪裁的边界是 border box 的内边缘，而非 padding box 的内边缘。
+
+#### 了解 overflow-x 和 overflow-y
+
+如果 overflow-x 和 overflow-y 属性中的一个值设置为 visible 而另外一个设置为 scroll、auto 或 hidden，则 visible 的样式表现会如同 auto。也就是说， 除非 overflow-x 和 overflow-y 的属性值都是 visible，否则 visible 会当成 auto 来解析。换句话说，永远不可能实现一个方向溢出剪裁或滚动，另一方向内容溢出显示的效果。但是，scroll、auto 和 hidden 这 3 个属性值是可以共存的。
+
+#### overflow 与滚动条
+
