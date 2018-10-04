@@ -443,6 +443,7 @@ BFC全称为block formatting context，中文为“块级格式化上下文”�
 ##### 锚点定位行为的触发条件
 
 (1) URL 地址中的锚链与锚点元素对应并有交互行为; 
+
 (2)可 focus 的锚点元素处于 focus 状态。
 
 锚点定位行为的发生，本质上是通过改变容器滚动高度或者宽度来实现的。锚点定位也可以发生在普通的容器元素上，而且定位行为的发生是由内而外的。“由内而外”指的是，普通元素和窗体同时可滚动的时候，会由内而外触发所有可滚 动窗体的锚点定位行为。其次就是设置了 overflow:hidden 的元素也是可滚动的，overflow:hidden 跟 overflow:auto 和 overflow:scroll 的差别就 在于有没有那个滚动条。元素设置了 overflow:hidden 声明，里面内容高度溢出的时候，滚动依然存在，仅仅滚动条不存在!
@@ -522,8 +523,11 @@ BFC全称为block formatting context，中文为“块级格式化上下文”�
 #### absolute 的包含块
 
 (1)根元素(很多场景下可以看成是<html>)被称为“初始包含块”，其尺寸等同于浏览 器可视窗口的大小。
+	
 (2)对于其他元素，如果该元素的 position 是 relative 或者 static，则“包含块” 由其最近的块容器祖先盒的 content box 边界形成。
+
 (3)如果元素 position:fixed，则“包含块”是“初始包含块”。
+
 (4)如果元素 position:absolute，则“包含块”由最近的 position 不为 static 的祖先元素建立，具体方式如下：
 
 如果该祖先元素是纯 inline 元素，则规则略复杂：
@@ -539,5 +543,7 @@ BFC全称为block formatting context，中文为“块级格式化上下文”�
 可以看到，和常规元素相比，absolute 绝对定位元素的“包含块”有以下 3 个明显差异:
 
 (1)内联元素也可以作为“包含块”所在的元素;
+
 (2)“包含块”所在的元素不是父块级元素，而是最近的 position 不为 static 的祖先 元素或根元素;
+
 (3)边界是 padding box 而不是 content box。
